@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-nodeport              
+spec:
+  replicas: 2                    
+  selector:
+    matchLabels:
+      app: app-nodeport         
+  template:
+    metadata:
+      labels:
+        app: app-nodeport        
+    spec:
+      containers:
+      - name: web
+        image: pod-name-app:1.0  
+        imagePullPolicy: Never    
+        ports:
+        - containerPort: 8080     
+        env:
+        - name: POD_NAME        
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name   
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-clusterip             
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-clusterip
+  template:
+    metadata:
+      labels:
+        app: app-clusterip
+    spec:
+      containers:
+      - name: web
+        image: pod-name-app:1.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-loadbalancer         
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-loadbalancer
+  template:
+    metadata:
+      labels:
+        app: app-loadbalancer
+    spec:
+      containers:
+      - name: web
+        image: pod-name-app:1.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
